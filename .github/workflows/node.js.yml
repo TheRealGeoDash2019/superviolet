@@ -31,6 +31,6 @@ jobs:
     - run: zip "uv-scripts(${{ matrix.node-version }}).zip" ./dist/*
     - uses: actions/upload-artifact@v3
       with:
-        name: UV-scripts
+        name: UV-scripts (built with Node ${{ matrix.node-version }})
         path: ${{ github.workspace }}/uv-scripts(${{ matrix.node-version }}).zip
     # - run: npm test
