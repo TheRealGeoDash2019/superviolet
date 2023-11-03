@@ -17,7 +17,16 @@ jobs:
         with:
           node-version: 16
       - run: npm ci
-      - run: npm test
+      - run: npm build
+      - run: rm -rf ./.*
+      - run: rm -rf ./example
+      - run: rm -rf ./docs
+      - run: rm -rf ./src
+      - run: rm -rf build.js
+      - run: rm -rf CHANGELOG.md
+      - run: rm -rf pnpm-lock.yaml
+      - run: rm -rf webpack.config.js
+      - run: rm -rf package-lock.json
 
   publish-npm:
     needs: build
