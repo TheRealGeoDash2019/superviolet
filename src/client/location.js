@@ -1,13 +1,13 @@
 import EventEmitter from 'events';
 
 /**
- * @typedef {import('./index').default} UVClient
+ * @typedef {import('./index').default} SVClient
  */
 
 class LocationApi extends EventEmitter {
     /**
      *
-     * @param {UVClient} ctx
+     * @param {SVClient} ctx
      */
     constructor(ctx) {
         super();
@@ -41,12 +41,12 @@ class LocationApi extends EventEmitter {
     }
     overrideWorkerLocation(parse) {
         if (!this.WorkerLocation) return false;
-        const uv = this;
+        const sv = this;
 
         for (const key of this.keys) {
             this.ctx.overrideDescriptor(this.workerLocProto, key, {
                 get: () => {
-                    return parse(uv.href.get.call(this.location))[key];
+                    return parse(sv.href.get.call(this.location))[key];
                 },
             });
         }

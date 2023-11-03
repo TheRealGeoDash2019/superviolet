@@ -7,7 +7,7 @@ import { readFile } from 'fs/promises';
 
 // read version from package.json
 const pk = JSON.parse(await readFile(new URL('package.json', import.meta.url)));
-process.env.ULTRAVIOLET_VERSION = pk.version;
+process.env.SUPERVIOLET_VERSION = pk.version;
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -24,12 +24,12 @@ const config = {
         client: fileURLToPath(
             new URL('./src/client/index.js', import.meta.url)
         ),
-        handler: fileURLToPath(new URL('./src/uv.handler.js', import.meta.url)),
-        sw: fileURLToPath(new URL('./src/uv.sw.js', import.meta.url)),
+        handler: fileURLToPath(new URL('./src/sv.handler.js', import.meta.url)),
+        sw: fileURLToPath(new URL('./src/sv.sw.js', import.meta.url)),
     },
     output: {
         path: fileURLToPath(new URL('./dist/', import.meta.url)),
-        filename: 'uv.[name].js',
+        filename: 'sv.[name].js',
     },
     module: {
         rules: [
@@ -53,7 +53,7 @@ const config = {
         minimize: !isDevelopment,
         minimizer: [
             new TerserPlugin({
-                exclude: ['sw.js', 'uv.config.js'],
+                exclude: ['sw.js', 'sv.config.js'],
             }),
         ],
     },
@@ -63,7 +63,7 @@ const config = {
             patterns: [
                 {
                     from: fileURLToPath(
-                        new URL('./src/uv.config.js', import.meta.url)
+                        new URL('./src/sv.config.js', import.meta.url)
                     ),
                 },
                 {
@@ -73,7 +73,7 @@ const config = {
                 },
             ],
         }),
-        new webpack.EnvironmentPlugin('ULTRAVIOLET_VERSION'),
+        new webpack.EnvironmentPlugin('SUPERVIOLET_VERSION'),
     ],
     performance: {
         // suppress "entrypoint size limit" warning

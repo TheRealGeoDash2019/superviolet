@@ -1,10 +1,10 @@
 /**
- * @typedef {import('./index').default} Ultraviolet
+ * @typedef {import('./index').default} Superviolet
  */
 
 /**
  *
- * @param {Ultraviolet} ctx
+ * @param {Superviolet} ctx
  */
 export function attributes(ctx, meta = ctx.meta) {
     const { html, js, attributePrefix } = ctx;
@@ -78,7 +78,7 @@ export function attributes(ctx, meta = ctx.meta) {
 
 /**
  *
- * @param {Ultraviolet} ctx
+ * @param {Superviolet} ctx
  */
 export function text(ctx) {
     const { html, js, css } = ctx;
@@ -195,7 +195,7 @@ export function isEvent(name) {
 
 /**
  *
- * @param {Ultraviolet} ctx
+ * @param {Superviolet} ctx
  */
 export function injectHead(ctx) {
     const { html } = ctx;
@@ -215,10 +215,10 @@ export function createJsInject(
     referrer = ''
 ) {
     return (
-        `self.__uv$bareData = ${JSON.stringify(bareData)};` +
-        `self.__uv$cookies = ${JSON.stringify(cookies)};` +
-        `self.__uv$referrer = ${JSON.stringify(referrer)};` +
-        `self.__uv$bareURL = ${JSON.stringify(bareURL)}; `
+        `self.__sv$bareData = ${JSON.stringify(bareData)};` +
+        `self.__sv$cookies = ${JSON.stringify(cookies)};` +
+        `self.__sv$referrer = ${JSON.stringify(referrer)};` +
+        `self.__sv$bareURL = ${JSON.stringify(bareURL)}; `
     );
 }
 
@@ -244,7 +244,7 @@ export function createHtmlInject(
             ],
             attrs: [
                 {
-                    name: '__uv-script',
+                    name: '__sv-script',
                     value: '1',
                     skip: true,
                 },
@@ -258,7 +258,7 @@ export function createHtmlInject(
             attrs: [
                 { name: 'src', value: bundleScript, skip: true },
                 {
-                    name: '__uv-script',
+                    name: '__sv-script',
                     value: '1',
                     skip: true,
                 },
@@ -271,7 +271,7 @@ export function createHtmlInject(
             attrs: [
                 { name: 'src', value: clientScript, skip: true },
                 {
-                    name: '__uv-script',
+                    name: '__sv-script',
                     value: '1',
                     skip: true,
                 },
@@ -284,7 +284,7 @@ export function createHtmlInject(
             attrs: [
                 { name: 'src', value: configScript, skip: true },
                 {
-                    name: '__uv-script',
+                    name: '__sv-script',
                     value: '1',
                     skip: true,
                 },
@@ -297,7 +297,7 @@ export function createHtmlInject(
             attrs: [
                 { name: 'src', value: handlerScript, skip: true },
                 {
-                    name: '__uv-script',
+                    name: '__sv-script',
                     value: '1',
                     skip: true,
                 },

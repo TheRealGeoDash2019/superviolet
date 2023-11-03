@@ -1,17 +1,17 @@
 {
-    "name": "@titaniumnetwork-dev/ultraviolet",
+    "name": "@azuleum/superviolet",
     "version": "2.0.0",
     "description": "Highly sophisticated proxy used for evading internet censorship or accessing websites in a controlled sandbox using the power of service-workers and more!",
     "main": "lib/index.cjs",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/titaniumnetwork-dev/Ultraviolet.git"
+        "url": "https://github.com/TheRealGeoDash2019/superviolet.git"
     },
     "files": [
         "dist",
         "lib",
-        "uv.d.ts",
+        "sv.d.ts",
         "client.d.ts"
     ],
     "type": "module",

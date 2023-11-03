@@ -1,10 +1,10 @@
-/*global Ultraviolet*/
-self.__uv$config = {
+/*global Superviolet*/
+self.__sv$config = {
     /**
-     * The prefix for UV (Ultraviolet) resources.
+     * The prefix for SV (Superviolet) resources.
      * @type {string}
      */
-    prefix: '/~/uv/',
+    prefix: '/~/sv/',
 
     /**
      * The bare path.
@@ -13,50 +13,50 @@ self.__uv$config = {
     bare: '/bare/',
 
     /**
-     * Function to encode URLs using Ultraviolet's XOR codec.
+     * Function to encode URLs using Superviolet's XOR codec.
      * @type {function}
      * @param {string} url - The URL to encode.
      * @returns {string} The encoded URL.
      */
-    encodeUrl: Ultraviolet.codec.xor.encode,
+    encodeUrl: Superviolet.codec.xor.encode,
 
     /**
-     * Function to decode URLs using Ultraviolet's XOR codec.
+     * Function to decode URLs using Superviolet's XOR codec.
      * @type {function}
      * @param {string} url - The URL to decode.
      * @returns {string} The decoded URL.
      */
-    decodeUrl: Ultraviolet.codec.xor.decode,
+    decodeUrl: Superviolet.codec.xor.decode,
 
     /**
      * The handler path.
      * @type {string}
      */
-    handler: '/uv/uv.handler.js',
+    handler: '/sv/sv.handler.js',
 
     /**
      * The client path.
      * @type {string}
      */
-    client: '/uv/uv.client.js',
+    client: '/sv/sv.client.js',
 
     /**
      * The bundle path.
      * @type {string}
      */
-    bundle: '/uv/uv.bundle.js',
+    bundle: '/sv/sv.bundle.js',
 
     /**
      * The config path.
      * @type {string}
      */
-    config: '/uv/uv.config.js',
+    config: '/sv/sv.config.js',
 
     /**
      * The service worker path.
      * @type {string}
      */
-    sw: '/uv/uv.sw.js',
+    sw: '/sv/sv.sw.js',
 
     /**
      * Function to inject scripts into the doc Head

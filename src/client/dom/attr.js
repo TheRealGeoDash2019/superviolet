@@ -2,13 +2,13 @@ import EventEmitter from 'events';
 import HookEvent from '../hook.js';
 
 /**
- * @typedef {import('../index').default} UVClient
+ * @typedef {import('../index').default} SVClient
  */
 
 class AttrApi extends EventEmitter {
     /**
      *
-     * @param {UVClient} ctx
+     * @param {SVClient} ctx
      */
     constructor(ctx) {
         super();

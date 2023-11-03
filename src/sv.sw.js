@@ -1,11 +1,11 @@
-/*globals __uv$config*/
-// Users must import the config (and bundle) prior to importing uv.sw.js
+/*globals __sv$config*/
+// Users must import the config (and bundle) prior to importing sv.sw.js
 // This is to allow us to produce a generic bundle with no hard-coded paths.
 
 /**
- * @type {import('../uv').UltravioletCtor}
+ * @type {import('../sv').SupervioletCtor}
  */
-const Ultraviolet = self.Ultraviolet;
+const Superviolet = self.Superviolet;
 const cspHeaders = [
     'cross-origin-embedder-policy',
     'cross-origin-opener-policy',
@@ -26,8 +26,8 @@ const cspHeaders = [
 ];
 const emptyMethods = ['GET', 'HEAD'];
 
-class UVServiceWorker extends Ultraviolet.EventEmitter {
-    constructor(config = __uv$config) {
+class SVServiceWorker extends Superviolet.EventEmitter {
+    constructor(config = __sv$config) {
         super();
         if (!config.bare) config.bare = '/bare/';
         if (!config.prefix) config.prefix = '/service/';
@@ -37,9 +37,9 @@ class UVServiceWorker extends Ultraviolet.EventEmitter {
         ).map((str) => new URL(str, location).toString());
         this.address = addresses[~~(Math.random() * addresses.length)];
         /**
-         * @type {InstanceType<Ultraviolet['BareClient']>}
+         * @type {InstanceType<Superviolet['BareClient']>}
          */
-        this.bareClient = new Ultraviolet.BareClient(this.address);
+        this.bareClient = new Superviolet.BareClient(this.address);
     }
     /**
      *
@@ -56,29 +56,29 @@ class UVServiceWorker extends Ultraviolet.EventEmitter {
             if (!request.url.startsWith(location.origin + this.config.prefix))
                 return await fetch(request);
 
-            const ultraviolet = new Ultraviolet(this.config, this.address);
+            const superviolet = new Superviolet(this.config, this.address);
 
             if (typeof this.config.construct === 'function') {
-                this.config.construct(ultraviolet, 'service');
+                this.config.construct(superviolet, 'service');
             }
 
-            const db = await ultraviolet.cookie.db();
+            const db = await superviolet.cookie.db();
 
-            ultraviolet.meta.origin = location.origin;
-            ultraviolet.meta.base = ultraviolet.meta.url = new URL(
-                ultraviolet.sourceUrl(request.url)
+            superviolet.meta.origin = location.origin;
+            superviolet.meta.base = superviolet.meta.url = new URL(
+                superviolet.sourceUrl(request.url)
             );
 
             const requestCtx = new RequestContext(
                 request,
                 this,
-                ultraviolet,
+                superviolet,
                 !emptyMethods.includes(request.method.toUpperCase())
                     ? await request.blob()
                     : null
             );
 
-            if (ultraviolet.meta.url.protocol === 'blob:') {
+            if (superviolet.meta.url.protocol === 'blob:') {
                 requestCtx.blob = true;
                 requestCtx.base = requestCtx.url = new URL(
                     requestCtx.url.pathname
@@ -90,12 +90,12 @@ class UVServiceWorker extends Ultraviolet.EventEmitter {
                 request.referrer.startsWith(location.origin)
             ) {
                 const referer = new URL(
-                    ultraviolet.sourceUrl(request.referrer)
+                    superviolet.sourceUrl(request.referrer)
                 );
 
                 if (
                     requestCtx.headers.origin ||
-                    (ultraviolet.meta.url.origin !== referer.origin &&
+                    (superviolet.meta.url.origin !== referer.origin &&
                         request.mode === 'cors')
                 ) {
                     requestCtx.headers.origin = referer.origin;
@@ -104,10 +104,10 @@ class UVServiceWorker extends Ultraviolet.EventEmitter {
                 requestCtx.headers.referer = referer.href;
             }
 
-            const cookies = (await ultraviolet.cookie.getCookies(db)) || [];
-            const cookieStr = ultraviolet.cookie.serialize(
+            const cookies = (await superviolet.cookie.getCookies(db)) || [];
+            const cookieStr = superviolet.cookie.serialize(
                 cookies,
-                ultraviolet.meta,
+                superviolet.meta,
                 false
             );
 
@@ -174,7 +174,7 @@ class UVServiceWorker extends Ultraviolet.EventEmitter {
             }
 
             if (responseCtx.headers.location) {
-                responseCtx.headers.location = ultraviolet.rewriteUrl(
+                responseCtx.headers.location = superviolet.rewriteUrl(
                     responseCtx.headers.location
                 );
             }
@@ -204,17 +204,17 @@ class UVServiceWorker extends Ultraviolet.EventEmitter {
 
             if (responseCtx.headers['set-cookie']) {
                 Promise.resolve(
-                    ultraviolet.cookie.setCookies(
+                    superviolet.cookie.setCookies(
                         responseCtx.headers['set-cookie'],
                         db,
-                        ultraviolet.meta
+                        superviolet.meta
                     )
                 ).then(() => {
                     self.clients.matchAll().then(function (clients) {
                         clients.forEach(function (client) {
                             client.postMessage({
                                 msg: 'updateCookies',
-                                url: ultraviolet.meta.url.href,
+                                url: superviolet.meta.url.href,
                             });
                         });
                     });
@@ -229,30 +229,30 @@ class UVServiceWorker extends Ultraviolet.EventEmitter {
                         {
                             // craft a JS-safe list of arguments
                             const scripts = [
-                                ultraviolet.bundleScript,
-                                ultraviolet.clientScript,
-                                ultraviolet.configScript,
-                                ultraviolet.handlerScript,
+                                superviolet.bundleScript,
+                                superviolet.clientScript,
+                                superviolet.configScript,
+                                superviolet.handlerScript,
                             ]
                                 .map((script) => JSON.stringify(script))
                                 .join(',');
-                            responseCtx.body = `if (!self.__uv && self.importScripts) { ${ultraviolet.createJsInject(
+                            responseCtx.body = `if (!self.__sv && self.importScripts) { ${superviolet.createJsInject(
                                 this.address,
                                 this.bareClient.manifest,
-                                ultraviolet.cookie.serialize(
+                                superviolet.cookie.serialize(
                                     cookies,
-                                    ultraviolet.meta,
+                                    superviolet.meta,
                                     true
                                 ),
                                 request.referrer
                             )} importScripts(${scripts}); }\n`;
-                            responseCtx.body += ultraviolet.js.rewrite(
+                            responseCtx.body += superviolet.js.rewrite(
                                 await response.text()
                             );
                         }
                         break;
                     case 'style':
-                        responseCtx.body = ultraviolet.rewriteCSS(
+                        responseCtx.body = superviolet.rewriteCSS(
                             await response.text()
                         );
                         break;
@@ -260,7 +260,7 @@ class UVServiceWorker extends Ultraviolet.EventEmitter {
                     case 'document':
                         if (
                             isHtml(
-                                ultraviolet.meta.url,
+                                superviolet.meta.url,
                                 responseCtx.headers['content-type'] || ''
                             )
                         ) {
@@ -289,20 +289,20 @@ class UVServiceWorker extends Ultraviolet.EventEmitter {
                                         modifiedResponse.slice(headPosition);
                                 }
                             }
-                            responseCtx.body = ultraviolet.rewriteHtml(
+                            responseCtx.body = superviolet.rewriteHtml(
                                 modifiedResponse,
                                 {
                                     document: true,
-                                    injectHead: ultraviolet.createHtmlInject(
-                                        ultraviolet.handlerScript,
-                                        ultraviolet.bundleScript,
-                                        ultraviolet.clientScript,
-                                        ultraviolet.configScript,
+                                    injectHead: superviolet.createHtmlInject(
+                                        superviolet.handlerScript,
+                                        superviolet.bundleScript,
+                                        superviolet.clientScript,
+                                        superviolet.configScript,
                                         this.address,
                                         this.bareClient.manifest,
-                                        ultraviolet.cookie.serialize(
+                                        superviolet.cookie.serialize(
                                             cookies,
-                                            ultraviolet.meta,
+                                            superviolet.meta,
                                             true
                                         ),
                                         request.referrer
@@ -337,10 +337,10 @@ class UVServiceWorker extends Ultraviolet.EventEmitter {
             return renderError(err, fetchedURL, this.address);
         }
     }
-    static Ultraviolet = Ultraviolet;
+    static Superviolet = Superviolet;
 }
 
-self.UVServiceWorker = UVServiceWorker;
+self.SVServiceWorker = SVServiceWorker;
 
 class ResponseContext {
     /**
@@ -351,7 +351,7 @@ class ResponseContext {
     constructor(request, response) {
         this.request = request;
         this.raw = response;
-        this.ultraviolet = request.ultraviolet;
+        this.superviolet = request.superviolet;
         this.headers = {};
         // eg set-cookie
         for (const key in response.rawHeaders)
@@ -375,12 +375,12 @@ class RequestContext {
     /**
      *
      * @param {Request} request
-     * @param {UVServiceWorker} worker
-     * @param {Ultraviolet} ultraviolet
+     * @param {SVServiceWorker} worker
+     * @param {Superviolet} superviolet
      * @param {BodyInit} body
      */
-    constructor(request, worker, ultraviolet, body = null) {
-        this.ultraviolet = ultraviolet;
+    constructor(request, worker, superviolet, body = null) {
+        this.superviolet = superviolet;
         this.request = request;
         this.headers = Object.fromEntries(request.headers.entries());
         this.method = request.method;
@@ -393,23 +393,23 @@ class RequestContext {
         this.blob = false;
     }
     get url() {
-        return this.ultraviolet.meta.url;
+        return this.superviolet.meta.url;
     }
     set url(val) {
-        this.ultraviolet.meta.url = val;
+        this.superviolet.meta.url = val;
     }
     get base() {
-        return this.ultraviolet.meta.base;
+        return this.superviolet.meta.base;
     }
     set base(val) {
-        this.ultraviolet.meta.base = val;
+        this.superviolet.meta.base = val;
     }
 }
 
 function isHtml(url, contentType = '') {
     return (
         (
-            Ultraviolet.mime.contentType(contentType || url.pathname) ||
+            Superviolet.mime.contentType(contentType || url.pathname) ||
             'text/html'
         ).split(';')[0] === 'text/html'
     );
@@ -450,9 +450,9 @@ function hostnameErrorTemplate(fetchedURL, bareServer) {
             parsedFetchedURL.hostname
         )};` +
         `bareServer.href = ${JSON.stringify(bareServer)};` +
-        `uvHostname.textContent = ${JSON.stringify(location.hostname)};` +
+        `svHostname.textContent = ${JSON.stringify(location.hostname)};` +
         `reload.addEventListener("click", () => location.reload());` +
-        `uvVersion.textContent = ${JSON.stringify(
+        `svVersion.textContent = ${JSON.stringify(
             process.env.ULTRAVIOLET_VERSION
         )};`;
 
@@ -471,12 +471,12 @@ function hostnameErrorTemplate(fetchedURL, bareServer) {
         '<ul>' +
         '<li>Verifying you entered the correct address</li>' +
         '<li>Clearing the site data</li>' +
-        '<li>Contacting <b id="uvHostname"></b>\'s administrator</li>' +
+        '<li>Contacting <b id="svHostname"></b>\'s administrator</li>' +
         "<li>Verifying the <a id='bareServer' title='Bare server'>Bare server</a> isn't censored</li>" +
         '</ul>' +
         '<button id="reload">Reload</button>' +
         '<hr />' +
-        '<p><i>Ultraviolet v<span id="uvVersion"></span></i></p>' +
+        '<p><i>Superviolet v<span id="svVersion"></span></i></p>' +
         `<script src="${
             'data:application/javascript,' + encodeURIComponent(script)
         }"></script>` +
@@ -518,11 +518,11 @@ function errorTemplate(
         `errorTrace.value = ${JSON.stringify(trace)};` +
         `fetchedURL.textContent = ${JSON.stringify(fetchedURL)};` +
         `bareServer.href = ${JSON.stringify(bareServer)};` +
-        `for (const node of document.querySelectorAll("#uvHostname")) node.textContent = ${JSON.stringify(
+        `for (const node of document.querySelectorAll("#svHostname")) node.textContent = ${JSON.stringify(
             location.hostname
         )};` +
         `reload.addEventListener("click", () => location.reload());` +
-        `uvVersion.textContent = ${JSON.stringify(
+        `svVersion.textContent = ${JSON.stringify(
             process.env.ULTRAVIOLET_VERSION
         )};`;
 
@@ -548,18 +548,18 @@ function errorTemplate(
         '<li>Checking your internet connection</li>' +
         '<li>Verifying you entered the correct address</li>' +
         '<li>Clearing the site data</li>' +
-        '<li>Contacting <b id="uvHostname"></b>\'s administrator</li>' +
+        '<li>Contacting <b id="svHostname"></b>\'s administrator</li>' +
         "<li>Verify the <a id='bareServer' title='Bare server'>Bare server</a> isn't censored</li>" +
         '</ul>' +
-        '<p>If you\'re the administrator of <b id="uvHostname"></b>, try:</p>' +
+        '<p>If you\'re the administrator of <b id="svHostname"></b>, try:</p>' +
         '<ul>' +
         '<li>Restarting your Bare server</li>' +
-        '<li>Updating Ultraviolet</li>' +
-        '<li>Troubleshooting the error on the <a href="https://github.com/titaniumnetwork-dev/Ultraviolet" target="_blank">GitHub repository</a></li>' +
+        '<li>Updating Superviolet</li>' +
+        '<li>Troubleshooting the error on the <a href="https://github.com/TheRealGeoDash2019/superviolet" target="_blank">GitHub repository</a></li>' +
         '</ul>' +
         '<button id="reload">Reload</button>' +
         '<hr />' +
-        '<p><i>Ultraviolet v<span id="uvVersion"></span></i></p>' +
+        '<p><i>Superviolet v<span id="svVersion"></span></i></p>' +
         `<script src="${
             'data:application/javascript,' + encodeURIComponent(script)
         }"></script>` +

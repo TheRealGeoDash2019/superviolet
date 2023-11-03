@@ -1,3 +1,3 @@
-declare const Ultraviolet: typeof import('./uv').Ultraviolet;
+declare const Superviolet: typeof import('./sv').Superviolet;
 
-declare var __uv$config: import('./uv').UVConfig;
+declare var __sv$config: import('./sv').SVConfig;
