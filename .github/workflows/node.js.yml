@@ -29,7 +29,7 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: cd ./dist
-    - run: zip uv-scripts(${{ matrix.node-version }}).zip *
+    - run: zip "uv-scripts(${{ matrix.node-version }}).zip" *
     - uses: actions/upload-artifact@v3
       with:
         name: UV-scripts
