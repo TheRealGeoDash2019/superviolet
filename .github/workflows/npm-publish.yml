@@ -18,7 +18,9 @@ jobs:
           node-version: 16
       - run: npm ci
       - run: npm run build
-      - run: rm -rf ./.*
+      - run: rm -rf ./.eslint*
+      - run: rm -rf ./.prettier*
+      - run: rm -rf ./.git*
       - run: rm -rf ./example
       - run: rm -rf ./docs
       - run: rm -rf ./src
