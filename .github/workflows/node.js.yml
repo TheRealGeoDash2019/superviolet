@@ -29,9 +29,7 @@ jobs:
         cache: 'npm'
     - run: npm ci
     - run: npm run build --if-present
-    # - run: zip "uv-scripts(${{ matrix.node-version }}).zip" ./dist/*
     - uses: actions/upload-artifact@v3
       with:
-        name: UV-scripts (built with Node ${{ matrix.node-version }})
+        name: SV-scripts
         path: ${{ github.workspace }}/dist
-    # - run: npm test
