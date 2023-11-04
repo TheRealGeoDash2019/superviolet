@@ -453,7 +453,7 @@ function hostnameErrorTemplate(fetchedURL, bareServer) {
         `svHostname.textContent = ${JSON.stringify(location.hostname)};` +
         `reload.addEventListener("click", () => location.reload());` +
         `svVersion.textContent = ${JSON.stringify(
-            process.env.ULTRAVIOLET_VERSION
+            process.env.SUPERVIOLET_VERSION
         )};`;
 
     return (
@@ -523,7 +523,7 @@ function errorTemplate(
         )};` +
         `reload.addEventListener("click", () => location.reload());` +
         `svVersion.textContent = ${JSON.stringify(
-            process.env.ULTRAVIOLET_VERSION
+            process.env.SUPERVIOLET_VERSION
         )};`;
 
     return (
