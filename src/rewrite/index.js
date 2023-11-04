@@ -38,13 +38,13 @@ import { BareClient } from '@tomphttp/bare-client';
 import EventEmitter from 'events';
 
 /**
- * @typedef {import('../uv.js').UVConfig} UVConfig
+ * @typedef {import('../sv.js').SVConfig} SVConfig
  */
 
-class Ultraviolet {
+class Superviolet {
     /**
      *
-     * @param {UVConfig} [options]
+     * @param {SVConfig} [options]
      */
     constructor(options = {}) {
         this.prefix = options.prefix || '/service/';
@@ -59,24 +59,24 @@ class Ultraviolet {
         this.meta = options.meta || {};
         this.meta.base ||= undefined;
         this.meta.origin ||= '';
-        this.bundleScript = options.bundle || '/uv.bundle.js';
-        this.handlerScript = options.handler || '/uv.handler.js';
+        this.bundleScript = options.bundle || '/sv.bundle.js';
+        this.handlerScript = options.handler || '/sv.handler.js';
         this.clientScript =
             options.client ||
             (options.bundle &&
-                options.bundle.includes('uv.bundle.js') &&
-                options.bundle.replace('uv.bundle.js', 'uv.client.js')) ||
-            '/uv.client.js';
-        this.configScript = options.config || '/uv.config.js';
+                options.bundle.includes('sv.bundle.js') &&
+                options.bundle.replace('sv.bundle.js', 'sv.client.js')) ||
+            '/sv.client.js';
+        this.configScript = options.config || '/sv.config.js';
         this.meta.url ||= this.meta.base || '';
-        this.codec = Ultraviolet.codec;
+        this.codec = Superviolet.codec;
         this.html = new HTML(this);
         this.css = new CSS(this);
         this.js = new JS(this);
         this.openDB = this.constructor.openDB;
-        this.master = '__uv';
-        this.dataPrefix = '__uv$';
-        this.attributePrefix = '__uv';
+        this.master = '__sv';
+        this.dataPrefix = '__sv$';
+        this.attributePrefix = '__sv';
         this.createHtmlInject = createHtmlInject;
         this.createJsInject = createJsInject;
         this.attrs = {
@@ -86,7 +86,7 @@ class Ultraviolet {
             isSrcset,
             isStyle,
         };
-        if (!this.vanilla) this.implementUVMiddleware();
+        if (!this.vanilla) this.implementSVMiddleware();
         this.cookie = {
             validateCookie,
             db: () => {
@@ -152,7 +152,7 @@ class Ultraviolet {
     decodeUrl(str) {
         return decodeURIComponent(str);
     }
-    implementUVMiddleware() {
+    implementSVMiddleware() {
         // HTML
         attributes(this);
         text(this);
@@ -194,5 +194,5 @@ class Ultraviolet {
     static EventEmitter = EventEmitter;
 }
 
-export default Ultraviolet;
-if (typeof self === 'object') self.Ultraviolet = Ultraviolet;
+export default Superviolet;
+if (typeof self === 'object') self.Superviolet = Superviolet;
