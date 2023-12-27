@@ -138,7 +138,7 @@ class SVServiceWorker extends Superviolet.EventEmitter {
             });
 
             if (typeof this.config.middleware === 'function') {
-                const middleware = this.config.middleware(Barereq);
+                const middleware = await (this.config.middleware(Barereq));
 
                 if (middleware instanceof Response) {
                     return middleware;
